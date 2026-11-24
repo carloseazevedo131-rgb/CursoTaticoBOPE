@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel de Governança – Unidade B.O.P.E</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--card:#fff;--ink:#14202b;--mute:#5d6b78;--line:#c9d2db;--acc:#0a7d5a;--acc2:#b3261e;--accInk:#fff;--shadow:0 0 0 transparent;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#080c10;--card:#0f161d;--ink:#e6f1ec;--mute:#8aa095;--line:#1f3a30;--acc:#00ff9c;--acc2:#ff4d4d;--accInk:#00140c;--shadow:0 0 18px rgba(0,255,156,.12)}}
+:root[data-theme="dark"]{--bg:#080c10;--card:#0f161d;--ink:#e6f1ec;--mute:#8aa095;--line:#1f3a30;--acc:#00ff9c;--acc2:#ff4d4d;--accInk:#00140c;--shadow:0 0 18px rgba(0,255,156,.12)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+h1,h2,h3,.tag{font-family:Orbitron,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--card)}
+header h1{font-size:1.05rem;margin:0;color:var(--acc)}
+header small{display:block;color:var(--mute);font-size:.7rem;letter-spacing:.1em}
+.who{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,input,textarea{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font:inherit;max-width:100%}
+select:focus,input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.badge{font-size:.7rem;padding:3px 8px;border:1px solid var(--acc);color:var(--acc);border-radius:99px;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+main{max-width:1100px;margin:0 auto;padding:20px}
+nav{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto}
+nav button{background:none;border:1px solid var(--line);color:var(--mute);padding:9px 16px;border-radius:6px;cursor:pointer;font:inherit;white-space:nowrap}
+nav button[aria-selected="true"]{background:var(--acc);color:var(--accInk);border-color:var(--acc);font-weight:700}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.bar h2{margin:0;font-size:1rem}
+.btn{background:var(--acc);color:var(--accInk);border:0;padding:9px 16px;border-radius:6px;font-weight:700;cursor:pointer;font:inherit;font-weight:700}
+.btn.ghost{background:none;color:var(--acc);border:1px solid var(--acc)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+.card .ico{font-size:1.9rem}
+.card h3{margin:0;font-size:.9rem}
+.card p{margin:0;color:var(--mute);flex:1}
+.card .row{display:flex;gap:8px;margin-top:8px}
+.card .row a{text-decoration:none}
+.wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:480px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-size:.72rem;color:var(--mute);text-transform:uppercase;letter-spacing:.1em}
+tr:last-child td{border-bottom:0}
+td.c,th.c{text-align:center}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--acc)}
+.note{color:var(--mute);font-size:.85rem;margin:10px 0 0}
+.lock{color:var(--acc2);font-size:.85rem}
+dialog{background:var(--card);color:var(--ink);border:1px solid var(--acc);border-radius:10px;padding:20px;width:min(440px,92vw)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog h3{margin:0 0 12px;color:var(--acc);font-size:.95rem}
+label{display:block;font-size:.8rem;color:var(--mute);margin:10px 0 4px}
+dialog input,dialog textarea,dialog select{width:100%}
+.acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--acc);color:var(--accInk);padding:10px 18px;border-radius:8px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s}
+#toast.on{opacity:1}
+.mute{color:var(--mute)}small.mute{font-size:.75rem}
+.pun{margin-bottom:8px}.pun:last-child{margin-bottom:0}
+.badge.pb{border-color:var(--acc2);color:var(--acc2)}
+.btn.danger{color:var(--acc2);border-color:var(--acc2)}
+.btn.solid-danger{background:var(--acc2);color:#fff}
+.acts2{display:flex;gap:6px;flex-wrap:wrap}
+.rp{display:block;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin:8px 0;cursor:pointer;font-size:.9rem;color:var(--ink)}
+.rp input{width:auto;margin-right:6px}
+body:not(.in) header,body:not(.in) main{display:none}
+body.in #login{display:none}
+#login{display:grid;place-items:center;min-height:80vh;padding:20px}
+.lbox{width:min(380px,92vw);background:var(--card);border:1px solid var(--acc);border-radius:10px;padding:26px;box-shadow:var(--shadow)}
+.lbox h1{font-size:1.1rem;color:var(--acc);margin:0;text-align:center}
+.lbox .sub{text-align:center;color:var(--mute);font-size:.75rem;letter-spacing:.15em;margin:4px 0 14px}
+.lbox input{width:100%}
+.lbox .btn{width:100%;margin-top:14px}
+#lerr{min-height:1.3em;margin:8px 0 0}
+footer{text-align:center;color:var(--mute);font-size:.72rem;letter-spacing:.2em;padding:24px 12px}
+</style>
+</head>
+<body>
+<section id="login"><form id="fLogin" class="lbox">
+  <h1>⚡ Unidade B.O.P.E ⚡</h1><p class="sub">PAINEL DE GOVERNANÇA</p>
+  <label for="ln">Nome</label><input id="ln" name="nome" autocomplete="username" required>
+  <label for="lp">Senha</label><input id="lp" name="senha" type="password" autocomplete="current-password" required>
+  <p id="lerr" class="lock" role="alert"></p>
+  <button class="btn">Entrar</button>
+  <p class="note" style="text-align:center">Acesso de teste: Comandante / 1234</p>
+</form></section>
+<header>
+  <div><h1>⚡ Unidade B.O.P.E ⚡</h1><small>PAINEL DE GOVERNANÇA</small></div>
+  <div class="who"><strong id="myName"></strong><span class="badge" id="myRole"></span><button class="btn ghost" id="out" type="button">Sair</button></div>
+</header>
+
+<main>
+  <nav role="tablist">
+    <button role="tab" data-tab="cursos" aria-selected="true">📚 Cursos</button>
+    <button role="tab" data-tab="usuarios" aria-selected="false">👥 Usuários</button>
+    <button role="tab" data-tab="niveis" aria-selected="false">🛡️ Níveis de acesso</button>
+  <button role="tab" data-tab="ativos" aria-selected="false">📋 Lista de ativos</button>
+  </nav>
+  <section id="view"></section>
+</main>
+
+<dialog id="dCourse"><form method="dialog" id="fCourse">
+  <h3 id="dCourseT">Curso</h3>
+  <label>Ícone (emoji)</label><input name="icon" maxlength="4" required>
+  <label>Título</label><input name="title" required>
+  <label>Descrição</label><textarea name="desc" rows="3"></textarea>
+  <label>Link do curso</label><input name="link" placeholder="https://…">
+  <label>Material do curso (PDF ou PowerPoint .pptx, até 25 MB)</label>
+  <input type="file" name="arq" accept=".pdf,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.presentationml.presentation">
+  <div id="curFileBox" style="display:none;margin-top:8px">
+    <div id="curFileName" class="mute" style="font-size:.85rem"></div>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0 0"><input type="checkbox" name="rmFile" style="width:auto"> Remover o arquivo atual</label>
+  </div>
+  <div class="acts"><button type="button" class="btn ghost" data-close>Cancelar</button><button class="btn" value="ok">Salvar</button></div>
+</form></dialog>
+
+<dialog id="dUser"><form method="dialog" id="fUser">
+  <h3>Novo usuário</h3>
+  <label>Nome</label><input name="nome" autocomplete="off" required>
+  <label>Senha</label><input name="senha" type="password" minlength="4" autocomplete="new-password" required>
+  <label>Nível</label><select name="role" id="newRole"></select>
+  <div class="acts"><button type="button" class="btn ghost" data-close>Cancelar</button><button class="btn" value="ok">Adicionar</button></div>
+</form></dialog>
+
+<dialog id="dAsset"><form id="fAsset">
+  <h3>Adicionar à lista</h3>
+  <label>Nome</label><input name="nome" autocomplete="off" required>
+  <div class="acts"><button type="button" class="btn ghost" data-close>Cancelar</button><button class="btn">Adicionar</button></div>
+</form></dialog>
+
+<dialog id="dPun"><form id="fPun">
+  <h3>Aplicar punição</h3>
+  <p style="margin:0;color:var(--mute)">Nome: <strong id="pName" style="color:var(--ink)"></strong></p>
+  <label>Tipo</label><select name="tipo"><option>Advertência verbal</option><option>Advertência escrita</option><option>Suspensão</option><option>Rebaixamento</option></select>
+  <label>Motivo</label><textarea name="motivo" rows="3" required></textarea>
+  <div class="acts"><button type="button" class="btn ghost" data-close>Cancelar</button><button class="btn solid-danger">Aplicar</button></div>
+</form></dialog>
+
+<dialog id="dRP"><form id="fRP">
+  <h3>Remover punição</h3>
+  <p style="margin:0;color:var(--mute)">Nome: <strong id="rpName" style="color:var(--ink)"></strong></p>
+  <div id="rpList"></div>
+  <div class="acts"><button type="button" class="btn ghost" data-close>Cancelar</button><button class="btn solid-danger">Remover punição</button></div>
+</form></dialog>
+
+<dialog id="dDel">
+  <h3>Remover da lista</h3>
+  <p>Remover <strong id="dName"></strong> da lista de ativos? As punições registradas também serão apagadas.</p>
+  <div class="acts"><button type="button" class="btn ghost" data-close>Cancelar</button><button type="button" class="btn solid-danger" id="confDel">Remover</button></div>
+</dialog>
+
+<dialog id="dReset"><form id="fReset">
+  <h3>Redefinir senha</h3>
+  <p style="margin:0;color:var(--mute)">Usuário: <strong id="rName" style="color:var(--ink)"></strong></p>
+  <label>Nova senha</label><input name="senha" type="password" minlength="4" autocomplete="new-password" required>
+  <label>Confirmar nova senha</label><input name="conf" type="password" minlength="4" autocomplete="new-password" required>
+  <div class="acts"><button type="button" class="btn ghost" data-close>Cancelar</button><button class="btn">Redefinir</button></div>
+</form></dialog>
+
+<div id="toast" role="status"></div>
+<footer>█ █ █ NÍVEL DE SEGURANÇA: MÁXIMO █ █ █</footer>
+
+<script>
+const ROLES={admin:'Comando',instrutor:'Instrutor',recrutador:'Recrutador',aluno:'Operador'};
+const PERMS={addCourse:'Adicionar cursos',editCourse:'Editar cursos',addUser:'Adicionar usuários'};
+const DEF={
+ courses:[
+  {id:1,icon:'🎯',title:'Curso Fuzil/Sub',desc:'Domínio total dos armamentos',link:''},
+  {id:2,icon:'⚡',title:'Manual Operacional',desc:'Protocolo de negociação',link:''},
+  {id:3,icon:'🔥',title:'Curso Açougue',desc:'Curso de progressão no açougue',link:''}],
+ users:[
+  {id:1,name:'Comandante',role:'admin',pw:'1234'},
+  {id:2,name:'Instrutor Alpha',role:'instrutor',pw:'1234'},
+  {id:3,name:'Recrutador Bravo',role:'recrutador',pw:'1234'},
+  {id:4,name:'Operador Charlie',role:'aluno',pw:'1234'}],
+ matrix:{admin:{addCourse:1,editCourse:1,addUser:1},instrutor:{addCourse:1,editCourse:1,addUser:0},recrutador:{addCourse:0,editCourse:0,addUser:1},aluno:{addCourse:0,editCourse:0,addUser:0}},
+ me:null};
+let S;
+try{S=JSON.parse(localStorage.getItem('coe-gov')||'null')}catch(e){S=null}
+if(!S)S=JSON.parse(JSON.stringify(DEF));
+S.assets=S.assets||[];
+const save=()=>{try{localStorage.setItem('coe-gov',JSON.stringify(S))}catch(e){}};
+const $=s=>document.querySelector(s);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const user=()=>S.users.find(u=>u.id===S.me)||S.users[0];
+const can=p=>user().role==='admin'||!!S.matrix[user().role][p];
+let tab='cursos',editId=null;
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
+
+function head(){
+  $('#myName').textContent=user().name;
+  $('#myRole').textContent=ROLES[user().role];
+}
+
+function viewCursos(){
+  return `<div class="bar"><h2>⚔️ Arsenal de operações</h2>
+  <button class="btn" id="addC" ${can('addCourse')?'':'disabled title="Sem permissão"'}>+ Adicionar curso</button></div>
+  <div class="grid">${S.courses.map(c=>`<article class="card"><div class="ico">${esc(c.icon)}</div><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p>${c.file?`<button class="btn ghost" data-down="${c.id}" title="${esc(c.file.name)}">📎 Baixar ${esc(c.file.name.length>22?c.file.name.slice(0,19)+'…':c.file.name)} (${fmt(c.file.size)})</button>`:''}
+  <div class="row">${c.link?`<a class="btn" href="${esc(c.link)}" target="_blank" rel="noopener">▶ Iniciar</a>`:`<button class="btn" disabled>▶ Iniciar</button>`}
+  ${can('editCourse')?`<button class="btn ghost" data-edit="${c.id}">✎ Editar</button>`:''}</div></article>`).join('')}</div>
+  ${can('addCourse')||can('editCourse')?'':'<p class="note lock">🔒 Seu nível só permite visualizar os cursos.</p>'}`;
+}
+
+function viewUsers(){
+  const adm=user().role==='admin';
+  return `<div class="bar"><h2>👥 Efetivo</h2>
+  <button class="btn" id="addU" ${can('addUser')?'':'disabled title="Sem permissão"'}>+ Adicionar usuário</button></div>
+  <div class="wrap"><table><thead><tr><th>Nome</th><th>Nível</th>${adm?'<th>Senha</th>':''}</tr></thead><tbody>
+  ${S.users.map(u=>`<tr><td>${esc(u.name)}</td><td>${adm?`<select data-role="${u.id}">${Object.entries(ROLES).map(([k,v])=>`<option value="${k}" ${u.role===k?'selected':''}>${v}</option>`).join('')}</select>`:`<span class="badge">${ROLES[u.role]}</span>`}</td>${adm?`<td><button class="btn ghost" data-reset="${u.id}">🔑 Redefinir senha</button></td>`:''}</tr>`).join('')}
+  </tbody></table></div>
+  <p class="note">${adm?'Como Comando, você pode alterar o nível de qualquer usuário.':'Somente o Comando altera níveis de usuários existentes.'}</p>`;
+}
+
+function viewNiveis(){
+  const adm=user().role==='admin';
+  return `<div class="bar"><h2>🛡️ Matriz de permissões</h2></div>
+  <div class="wrap"><table><thead><tr><th>Nível</th>${Object.values(PERMS).map(p=>`<th class="c">${p}</th>`).join('')}</tr></thead><tbody>
+  ${Object.entries(ROLES).map(([r,n])=>`<tr><td><span class="badge">${n}</span></td>${Object.keys(PERMS).map(p=>`<td class="c"><input type="checkbox" data-r="${r}" data-p="${p}" ${(r==='admin'||S.matrix[r][p])?'checked':''} ${(!adm||r==='admin')?'disabled':''} aria-label="${n}: ${PERMS[p]}"></td>`).join('')}</tr>`).join('')}
+  </tbody></table></div>
+  <p class="note">${adm?'Marque ou desmarque para ajustar o que cada nível pode fazer. O Comando sempre tem acesso total.':'🔒 Apenas o Comando pode alterar esta matriz.'}</p>`;
+}
+
+const canA=()=>['admin','instrutor'].includes(user().role);
+const fd=d=>{try{return new Date(d).toLocaleDateString('pt-BR')}catch(e){return ''}};
+function viewAtivos(){
+  const ok=canA();
+  return `<div class="bar"><h2>📋 Lista de ativos</h2>
+  <button class="btn" id="addA" ${ok?'':'disabled title="Sem permissão"'}>+ Adicionar à lista</button></div>
+  <div class="wrap"><table><thead><tr><th>Nome</th><th>Adicionado</th><th>Punições</th>${ok?'<th>Ações</th>':''}</tr></thead><tbody>
+  ${S.assets.length?S.assets.map(a=>`<tr><td><strong>${esc(a.name)}</strong></td>
+  <td>${fd(a.date)}<br><small class="mute">por ${esc(a.by)}</small></td>
+  <td>${a.pun.length?a.pun.map(p=>`<div class="pun"><span class="badge pb">${esc(p.tipo)}</span> ${esc(p.motivo)}<br><small class="mute">${fd(p.date)} · ${esc(p.by)}</small></div>`).join(''):'<span class="mute">Nenhuma</span>'}</td>
+  ${ok?`<td><div class="acts2"><button class="btn ghost" data-pun="${a.id}">⚠️ Punir</button><button class="btn ghost" data-rempun="${a.id}" ${a.pun.length?'':'disabled title="Sem punições"'}>↩ Remover punição</button><button class="btn ghost danger" data-delasset="${a.id}">🗑 Remover</button></div></td>`:''}</tr>`).join(''):`<tr><td colspan="${ok?4:3}" class="mute">Nenhum nome na lista.</td></tr>`}
+  </tbody></table></div>
+  <p class="note">${ok?'Como Instrutor ou Comando, você pode adicionar, remover e aplicar punições.':'🔒 Somente Instrutor e Comando podem adicionar, remover ou punir nomes desta lista.'}</p>`;
+}
+
+function render(){
+  head();
+  document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
+  $('#view').innerHTML=tab==='cursos'?viewCursos():tab==='usuarios'?viewUsers():tab==='ativos'?viewAtivos():viewNiveis();
+}
+
+document.addEventListener('click',e=>{
+  const t=e.target;
+  if(t.dataset.tab){tab=t.dataset.tab;render()}
+  if(t.closest('[data-close]'))t.closest('dialog').close();
+  if(t.id==='addC'&&can('addCourse')){editId=null;$('#dCourseT').textContent='Novo curso';$('#fCourse').reset();showFile(null);$('#dCourse').showModal()}
+  if(t.dataset.edit&&can('editCourse')){editId=+t.dataset.edit;const c=S.courses.find(x=>x.id===editId),f=$('#fCourse');
+    $('#dCourseT').textContent='Editar curso';f.reset();f.icon.value=c.icon;f.title.value=c.title;f.desc.value=c.desc;f.link.value=c.link;showFile(c);$('#dCourse').showModal()}
+  if(t.id==='addU'&&can('addUser')){$('#fUser').reset();$('#dUser').showModal()}
+  if(t.id==='out')logout();
+  const dq=t.closest('[data-down]');
+  if(dq)fDown(S.courses.find(c=>c.id===+dq.dataset.down));
+  const rb=t.closest('[data-reset]');
+  if(rb&&user().role==='admin'){resetId=+rb.dataset.reset;$('#fReset').reset();$('#rName').textContent=S.users.find(u=>u.id===resetId).name;$('#dReset').showModal()}
+  if(t.id==='addA'&&canA()){$('#fAsset').reset();$('#dAsset').showModal()}
+  const pb=t.closest('[data-pun]');
+  if(pb&&canA()){assetId=+pb.dataset.pun;$('#fPun').reset();$('#pName').textContent=S.assets.find(a=>a.id===assetId).name;$('#dPun').showModal()}
+  const xb=t.closest('[data-delasset]');
+  if(xb&&canA()){assetId=+xb.dataset.delasset;$('#dName').textContent=S.assets.find(a=>a.id===assetId).name;$('#dDel').showModal()}
+  if(t.id==='confDel'&&canA()){S.assets=S.assets.filter(a=>a.id!==assetId);save();$('#dDel').close();render();toast('Removido da lista')}
+  const rq=t.closest('[data-rempun]');
+  if(rq&&canA()){
+    assetId=+rq.dataset.rempun;const a=S.assets.find(x=>x.id===assetId);
+    if(a&&a.pun.length){
+      $('#rpName').textContent=a.name;
+      $('#rpList').innerHTML=a.pun.map((p,i)=>`<label class="rp"><input type="radio" name="pid" value="${p.id}" ${i===0?'checked':''}> <span class="badge pb">${esc(p.tipo)}</span> ${esc(p.motivo)}<br><small class="mute">${fd(p.date)} · ${esc(p.by)}</small></label>`).join('');
+      $('#dRP').showModal();
+    }
+  }
+});
+
+document.addEventListener('change',e=>{
+  const t=e.target;
+
+  if(t.dataset.role&&user().role==='admin'){S.users.find(u=>u.id===+t.dataset.role).role=t.value;save();render();toast('Nível atualizado')}
+  if(t.dataset.p&&user().role==='admin'){S.matrix[t.dataset.r][t.dataset.p]=t.checked?1:0;save();toast('Permissão atualizada')}
+});
+
+$('#fCourse').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const f=e.target,el=f.elements,d={icon:el.icon.value.trim(),title:el.title.value.trim(),desc:el.desc.value.trim(),link:el.link.value.trim()};
+  if(!d.title)return;
+  const adding=!editId;
+  if(adding?!can('addCourse'):!can('editCourse'))return;
+  const c=adding?{id:Date.now(),file:null}:S.courses.find(x=>x.id===editId);
+  const up=el.arq.files[0];
+  if(up){
+    const ext=up.name.split('.').pop().toLowerCase();
+    if(!['pdf','pptx'].includes(ext)){toast(ext==='ppt'?'Converta o .ppt para .pptx e envie de novo':'Envie um arquivo .pdf ou .pptx');return}
+    if(up.size>MAXF){toast('Arquivo acima de 25 MB');return}
+    try{
+      const fid='f'+Date.now();
+      await fPut(fid,up);
+      if(c.file){try{await fDel(c.file.id)}catch(err){}}
+      c.file={id:fid,name:up.name,size:up.size};
+    }catch(err){toast('Não foi possível guardar o arquivo neste navegador');return}
+  }else if(el.rmFile.checked&&c.file){
+    try{await fDel(c.file.id)}catch(err){}
+    c.file=null;
+  }
+  Object.assign(c,d);
+  if(adding)S.courses.push(c);
+  save();$('#dCourse').close();render();toast(adding?'Curso adicionado':'Curso atualizado');
+});
+$('#fUser').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const f=e.target,nome=f.nome.value.trim();
+  if(!can('addUser')||!nome||f.senha.value.length<4)return;
+  if(S.users.some(u=>u.name.toLowerCase()===nome.toLowerCase())){toast('Já existe um usuário com esse nome');return}
+  let role=f.role.value;
+  if(role==='admin'&&user().role!=='admin')role='aluno';
+  S.users.push({id:Date.now(),name:nome,role,hash:await hash(f.senha.value)});
+  save();$('#dUser').close();render();toast('Usuário adicionado');
+});
+$('#newRole').innerHTML=Object.entries(ROLES).map(([k,v])=>`<option value="${k}" ${k==='aluno'?'selected':''}>${v}</option>`).join('');
+const MAXF=25*1024*1024;
+const fmt=n=>n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+function showFile(c){
+  const has=!!(c&&c.file);
+  $('#curFileBox').style.display=has?'block':'none';
+  $('#curFileName').textContent=has?'Atual: '+c.file.name+' ('+fmt(c.file.size)+')':'';
+}
+function fdb(){return new Promise((res,rej)=>{const r=indexedDB.open('bope-files',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function fTx(mode,fn){
+  const db=await fdb();
+  return new Promise((res,rej)=>{const t=db.transaction('f',mode);const q=fn(t.objectStore('f'));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)});
+}
+const fPut=(id,blob)=>fTx('readwrite',s=>s.put(blob,id));
+const fGet=id=>fTx('readonly',s=>s.get(id));
+const fDel=id=>fTx('readwrite',s=>s.delete(id));
+async function fDown(c){
+  if(!c||!c.file)return;
+  let blob;
+  try{blob=await fGet(c.file.id)}catch(e){}
+  if(!blob){toast('Arquivo não encontrado neste navegador');return}
+  let dl=null;
+  try{dl=window.claude?await window.claude.use('downloads'):null}catch(e){}
+  if(dl){
+    try{await dl.save({filename:c.file.name,data:blob})}
+    catch(err){if(!err||err.code!=='declined')toast('Não foi possível baixar o arquivo')}
+    return;
+  }
+  const u=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=u;a.download=c.file.name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),4000);
+}
+let assetId=null;
+$('#fAsset').addEventListener('submit',e=>{
+  e.preventDefault();
+  const nome=e.target.nome.value.trim();
+  if(!canA()||!nome)return;
+  if(S.assets.some(a=>a.name.toLowerCase()===nome.toLowerCase())){toast('Esse nome já está na lista');return}
+  S.assets.push({id:Date.now(),name:nome,by:user().name,date:new Date().toISOString(),pun:[]});
+  save();$('#dAsset').close();render();toast('Adicionado à lista');
+});
+$('#fPun').addEventListener('submit',e=>{
+  e.preventDefault();
+  const f=e.target,a=S.assets.find(x=>x.id===assetId);
+  if(!canA()||!a||!f.motivo.value.trim())return;
+  a.pun.push({id:Date.now(),tipo:f.tipo.value,motivo:f.motivo.value.trim(),by:user().name,date:new Date().toISOString()});
+  save();$('#dPun').close();render();toast('Punição aplicada');
+});
+$('#fRP').addEventListener('submit',e=>{
+  e.preventDefault();
+  const a=S.assets.find(x=>x.id===assetId),sel=e.target.querySelector('input[name=pid]:checked');
+  if(!canA()||!a||!sel)return;
+  a.pun=a.pun.filter(p=>p.id!==+sel.value);
+  save();$('#dRP').close();render();toast('Punição removida');
+});
+let resetId=null;
+$('#fReset').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const f=e.target;
+  if(user().role!=='admin')return;
+  if(f.senha.value!==f.conf.value){toast('As senhas não coincidem');return}
+  const u=S.users.find(x=>x.id===resetId);if(!u)return;
+  u.hash=await hash(f.senha.value);save();$('#dReset').close();toast('Senha de '+u.name+' redefinida');
+});
+async function hash(p){
+  try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('bope:'+p));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+  catch(e){return 'p:'+p}
+}
+function enter(){document.body.classList.add('in');tab='cursos';render()}
+function logout(){
+  S.me=null;try{sessionStorage.removeItem('bope-sess')}catch(e){}
+  document.body.classList.remove('in');$('#fLogin').reset();
+}
+$('#fLogin').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const f=e.target,n=f.nome.value.trim().toLowerCase(),h=await hash(f.senha.value);
+  const u=S.users.find(x=>x.name.toLowerCase()===n&&x.hash===h);
+  if(!u){$('#lerr').textContent='Nome ou senha inválidos.';return}
+  S.me=u.id;try{sessionStorage.setItem('bope-sess',u.id)}catch(err){}
+  $('#lerr').textContent='';f.reset();enter();
+});
+(async function init(){
+  let ch=false;
+  for(const u of S.users){if(!u.hash){u.hash=await hash(u.pw||'1234');ch=true}delete u.pw}
+  S.me=null;if(ch)save();
+  let sid=null;try{sid=+sessionStorage.getItem('bope-sess')||null}catch(e){}
+  if(sid&&S.users.some(u=>u.id===sid)){S.me=sid;enter()}
+})();
+</script>
+</body>
+</html>
